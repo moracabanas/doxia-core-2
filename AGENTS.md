@@ -32,14 +32,38 @@ srtd apply                 # Aplicar cambios a BD
 **Importante**: Usa `CREATE OR REPLACE` en templates SRTD para makes migrations idempotent.
 
 ### Python (src/)
+
+**Gestión de dependencias con UV:**
+```bash
+uv add <package>          # Añadir dependencia
+uv remove <package>       # Remover dependencia
+uv sync                   # Sincronizar lock file
+uv run script.py          # Ejecutar script con dependencias inline
+```
+
+**Scripts con inline dependencies:**
+```python
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#   "asyncpg",
+#   "pytest",
+# ]
+# ///
+```
+
+**Linting y type checking:**
 ```bash
 ruff check                 # Linting
-ruff format                # Formateo automático
-mypy src/                  # Type checking (strict mode)
-pytest                     # Todos los tests
-pytest -k "test_name"     # Test individual por nombre
-pytest --cov=src --cov-report=html  # Coverage HTML
-pytest tests/python/      # Solo tests de un directorio
+ruff format               # Formateo automático
+mypy src/                 # Type checking (strict mode)
+```
+
+**Tests:**
+```bash
+uv run pytest             # Todos los tests
+uv run pytest -k "test"   # Test individual
+uv run pytest --cov=src   # Con coverage
 ```
 
 ### Frontend (apps/web/)
@@ -381,3 +405,4 @@ first, then check `supabase/migrations/` for related database objects.
 - `python-testing` - pytest patterns, TDD, fixtures
 - `shadcn-ui` - Tailwind + Shadcn components
 - `langchain-rag` - RAG patterns for Python
+- `python-uv` - UV package management for Python

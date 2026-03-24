@@ -1,4 +1,4 @@
--- FSM Trigger: Document Created
+-- FSM Function: Trigger on document insert
 -- Creates audit log entry and enqueues work for document processing
 
 -- Function: fn_on_document_created
