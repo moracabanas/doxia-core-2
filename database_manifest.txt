@@ -1,0 +1,24 @@
+# Database Manifest - Load Order
+# Doxia Core DDL Processing
+
+## Order of execution
+1. Extensions
+2. Tables
+3. Functions (before triggers)
+4. Triggers
+5. RLS Policies
+6. Seeds
+
+## Files
+
+### Extensions
+supabase/migrations/*_init_pgmq.sql
+
+### Tables
+supabase/migrations/*_init_core_schema.sql
+
+### Functions
+src/modules/fsm_domain/functions/fn_on_document_created.sql
+
+### Triggers
+src/modules/fsm_domain/triggers/trg_document_created.sql
