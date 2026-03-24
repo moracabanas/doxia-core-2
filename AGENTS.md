@@ -78,6 +78,25 @@ playwright test            # E2E tests
 playwright test tests/e2e/foo.spec.ts  # E2E individual
 ```
 
+### MCP Servers (Model Context Protocol)
+```bash
+opencode mcp list          # Ver estado de MCPs
+```
+
+**MCPs disponibles:**
+- `context7` - Búsqueda de documentación (remote)
+- `postgres` - Query directo a Postgres local (:54322)
+- `supabase-local` - API PostgREST de Supabase local (:54321/rest/v1)
+
+**Uso en prompts:**
+```
+When you need to search docs, use `context7` tools.
+When you need to check the database schema, use the `postgres` MCP tool.
+When you need to interact with Supabase REST API, use `supabase-local` tool.
+```
+
+**Requisito:** Supabase local debe estar corriendo (`supabase start`)
+
 ---
 
 ## Code Style Guidelines
