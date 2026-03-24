@@ -4,6 +4,24 @@
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "postgres": {
+      "type": "local",
+      "command": ["postgres-mcp"],
+      "environment": {
+        "PGHOST": "localhost",
+        "PGPORT": "54322",
+        "PGUSER": "postgres",
+        "PGPASSWORD": "postgres",
+        "PGDATABASE": "postgres"
+      }
+    },
+    "supabase-local": {
+      "type": "local",
+      "command": ["mcp-server-postgrest", "--apiUrl", "http://127.0.0.1:54321/rest/v1", "--schema", "public"],
+      "environment": {
+        "SUPABASE_ACCESS_TOKEN": "dummy-for-local"
+      }
     }
   }
 }
