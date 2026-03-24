@@ -16,9 +16,17 @@ supabase/migrations/*_init_pgmq.sql
 
 ### Tables
 supabase/migrations/*_init_core_schema.sql
+supabase/migrations/*_init_auth_schema.sql
 
 ### Functions
 src/modules/fsm_domain/functions/fn_on_document_created.sql
+src/modules/auth_domain/functions/is_org_member.sql
+src/modules/auth_domain/functions/fn_handle_new_user.sql
 
 ### Triggers
 src/modules/fsm_domain/triggers/trg_document_created.sql
+src/modules/auth_domain/triggers/trg_on_auth_user_created.sql
+
+### RLS Policies
+supabase/migrations/*_init_rls_policies_auth.sql
+src/modules/auth_domain/policies/rls_tenant_isolation.sql
