@@ -209,11 +209,11 @@ import { DocumentCard } from './DocumentCard';
 
 El texto se recupera en tiempo real via MCP del conector original.
 
-**Vector Search (Qdrant):**
-- Collections: `VectorParams(size=1536, distance=Distance.COSINE)`
-- Filtrado por payload: `FieldCondition(key="connector_id", match=...)`
-- HNSW config: `m=16, ef_construct=100`
-- Cuantización para >1M vectores: `ScalarQuantization(INT8)`
+**Vector Search (pgvector + Supabase):**
+- Extensión: `vector(1536)` para embeddings
+- Filtrado: Usar índices normales + RLS para org_id
+- Búsqueda: `<->` operator para cosine similarity
+- HNSW: `CREATE INDEX ON documents USING hnsw (embedding vector_cosine_ops)`
 
 ### FSM Document States
 
@@ -367,4 +367,5 @@ first, then check `supabase/migrations/` for related database objects.
 **External Skills Installed:**
 - `supabase-postgres-best-practices` - Postgres performance rules
 - `python-testing` - pytest patterns, TDD, fixtures
-- `qdrant-vector-search` - Vector similarity search
+- `shadcn-ui` - Tailwind + Shadcn components
+- `langchain-rag` - RAG patterns for Python
