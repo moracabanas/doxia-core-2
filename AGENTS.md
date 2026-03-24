@@ -72,7 +72,19 @@ playwright test tests/e2e/foo.spec.ts  # E2E individual
 | Triggers | `trg_{table}_{event}` | `trg_documents_before_insert` |
 | Enums | `enum_{name}_{value}` | `enum_document_status` |
 
-**RLS Patterns:**
+**RLS - Activar por defecto:**
+```sql
+-- AL CREAR TABLA, siempre añade ENABLE ROW LEVEL SECURITY
+CREATE TABLE documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    org_id UUID NOT NULL REFERENCES organizations(id),
+    ...
+);
+
+ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+```
+
+**RLS Patterns:
 ```sql
 -- Tabla tenant-scoped SIEMPRE tiene org_id
 CREATE TABLE documents (

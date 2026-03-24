@@ -1,10 +1,10 @@
 -- pgTAP Tests for Doxia Core Schema
--- Phase 1: Verify core tables exist and have correct structure
+-- Phase 1: Verify core tables exist and have correct structure + RLS
 
 BEGIN;
 
--- Total number of tests
-SELECT plan(36);
+-- Total number of tests (47 total)
+SELECT plan(47);
 
 -- ============================================
 -- Test: organizations table
@@ -46,6 +46,15 @@ SELECT ok(
         AND data_type = 'timestamp with time zone'
     ),
     'organizations.created_at should be TIMESTAMPTZ'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_tables
+        WHERE tablename = 'organizations'
+        AND rowsecurity = true
+    ),
+    'organizations should have RLS enabled'
 );
 
 -- ============================================
@@ -108,6 +117,33 @@ SELECT ok(
         AND data_type = 'timestamp with time zone'
     ),
     'connectors.created_at should be TIMESTAMPTZ'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_tables
+        WHERE tablename = 'connectors'
+        AND rowsecurity = true
+    ),
+    'connectors should have RLS enabled'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'connectors'
+        AND policyname = 'rls_select_connectors'
+    ),
+    'connectors should have rls_select_connectors policy'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'connectors'
+        AND policyname = 'rls_insert_connectors'
+    ),
+    'connectors should have rls_insert_connectors policy'
 );
 
 -- ============================================
@@ -182,6 +218,24 @@ SELECT ok(
     'documents.created_at should be TIMESTAMPTZ'
 );
 
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_tables
+        WHERE tablename = 'documents'
+        AND rowsecurity = true
+    ),
+    'documents should have RLS enabled'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'documents'
+        AND policyname = 'rls_select_documents'
+    ),
+    'documents should have rls_select_documents policy'
+);
+
 -- ============================================
 -- Test: audit_logs table
 -- ============================================
@@ -212,6 +266,16 @@ SELECT ok(
         AND data_type = 'uuid'
     ),
     'audit_logs.document_id should be UUID'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'audit_logs'
+        AND column_name = 'organization_id'
+        AND data_type = 'uuid'
+    ),
+    'audit_logs.organization_id should be UUID'
 );
 
 SELECT ok(
@@ -274,6 +338,24 @@ SELECT ok(
     'audit_logs.created_at should be TIMESTAMPTZ'
 );
 
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_tables
+        WHERE tablename = 'audit_logs'
+        AND rowsecurity = true
+    ),
+    'audit_logs should have RLS enabled'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_policies
+        WHERE tablename = 'audit_logs'
+        AND policyname = 'rls_select_audit_logs'
+    ),
+    'audit_logs should have rls_select_audit_logs policy'
+);
+
 -- ============================================
 -- Test: Foreign keys
 -- ============================================
@@ -311,6 +393,15 @@ SELECT ok(
         AND constraint_type = 'FOREIGN KEY'
     ),
     'audit_logs.document_id FK should exist'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE constraint_name = 'audit_logs_organization_id_fkey'
+        AND constraint_type = 'FOREIGN KEY'
+    ),
+    'audit_logs.organization_id FK should exist'
 );
 
 -- ============================================
@@ -362,6 +453,14 @@ SELECT ok(
         WHERE indexname = 'idx_audit_logs_trace_id'
     ),
     'idx_audit_logs_trace_id should exist'
+);
+
+SELECT ok(
+    EXISTS (
+        SELECT 1 FROM pg_indexes
+        WHERE indexname = 'idx_audit_logs_organization_id'
+    ),
+    'idx_audit_logs_organization_id should exist'
 );
 
 -- ============================================
