@@ -23,13 +23,30 @@ supabase db diff           # Generar migración desde diff
 - `db reset`: Cuando hay errores de migración o necesitas estado limpio
 
 ### SRTD (SQL Runtime Templates)
+**Paquete**: `@t1mmen/srtd` - Compila templates SQL desde `templateDir` → `migrationDir`
+
 ```bash
-srtd build                 # Compilar templates → SQL
-srtd diff                  # Comparar local vs BD
+srtd build                 # Compilar templates → SQL (genera archivos en migrationDir)
+srtd diff                  # Comparar SQL compilado vs base de datos
 srtd apply                 # Aplicar cambios a BD
 ```
 
-**Importante**: Usa `CREATE OR REPLACE` en templates SRTD para makes migrations idempotent.
+**Flujo de trabajo:**
+1. Escribir templates SQL en `supabase/migrations-templates/` (lógica de negocio)
+2. `srtd build` → genera archivos SQL idempotentes en `supabase/migrations/`
+3. `srtd apply` → aplica los cambios a la BD local
+
+**Configuración** (`srtd.config.json`):
+```json
+{
+  "templateDir": "supabase/migrations-templates",
+  "migrationDir": "supabase/migrations",
+  "wrapInTransaction": true,
+  "pgConnection": "postgresql://postgres:postgres@localhost:54322/postgres"
+}
+```
+
+**Importante**: Usa `CREATE OR REPLACE` en templates para hacer migraciones idempotentes.
 
 ### Python (src/)
 
